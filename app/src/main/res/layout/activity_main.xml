@@ -23,6 +23,7 @@
         android:id="@+id/TargetNumberContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/NumberCardContainer"
         app:layout_constraintBottom_toTopOf="@id/ButtonContainer"
@@ -36,6 +37,18 @@
             android:text="000"
             style="@style/NumberCard"/>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/solutions_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="==="
+                />
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout

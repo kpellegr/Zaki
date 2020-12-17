@@ -2,4 +2,8 @@
     <string name="app_name">Zaki</string>
     <string name="button_label_generate">Generate</string>
     <string name="button_label_replay">Replay</string>
+
+    <string name="str_no_solutions">No solutions found</string>
+    <string name="str_solutions">Found %d solutions:</string>
+
 </resources>

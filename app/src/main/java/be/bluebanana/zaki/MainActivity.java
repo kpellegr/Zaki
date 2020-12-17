@@ -53,15 +53,20 @@ public class MainActivity extends AppCompatActivity {
         );
 
         // Observe the solutions
+        TextView sv = findViewById(R.id.solutions_view);
         model.getSolutions().observe(this, solutions -> {
             if (model.getState().getValue() != NumbersViewModel.GameState.SOLVED) return;
 
             if (solutions.size() == 0) {
+                sv.setText(getString(R.string.str_no_solutions));
                 Log.d("Node", "No solutions found...");
             }
-            for (int i = 0; i < min(10, solutions.size()); i++) {
-                Log.d("Node", String.format("%s = %.2f",
-                        solutions.get(i).toString(), solutions.get(i).evaluate()));
+            else {
+                sv.setText(getString(R.string.str_solutions, solutions.size()));
+                for (int i = 0; i < min(3, solutions.size()); i++) {
+                    sv.append(String.format("\n%s", solutions.get(i).toString()));
+                    Log.d("Node", String.format("%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
+                }
             }
         });
 
@@ -104,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     smallInc.setVisibility(View.VISIBLE);
                     largeInc.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.INVISIBLE);
+                    sv.setText("");
                     break;
                 case PICKING:
                     break;
