@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static java.lang.Math.min;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class NumbersViewModel extends ViewModel {
 
@@ -112,10 +112,16 @@ public class NumbersViewModel extends ViewModel {
     }
 
     public void solveForTarget() {
-        List<Node> solutions = Solver.solve(this.getNumbers().getValue(), this.getTarget().getValue());
-        this.solutions.setValue(solutions);
+        ExecutorService service =  Executors.newSingleThreadExecutor();
+        service.submit(new Runnable() {
+            @Override
+            public void run() {
+                List<Node> newSolutions = Solver.solve(getNumbers().getValue(), getTarget().getValue());
+                state.postValue(GameState.SOLVED);
+                solutions.postValue(newSolutions);
+            }
+        });
 
-        state.setValue(GameState.SOLVED);
     }
 
 }
