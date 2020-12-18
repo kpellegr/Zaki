@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
                             .build());
 
             String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + getPackageName() + File.separator + R.raw.musak_2;
+                    "://" + getPackageName() + File.separator + R.raw.muzak_3;
             Log.d("Sound", musicFile);
             Uri uri = Uri.parse(musicFile);
             mediaPlayer.setDataSource(getApplicationContext(), uri);
