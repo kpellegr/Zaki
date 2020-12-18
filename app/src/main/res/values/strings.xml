@@ -2,8 +2,14 @@
     <string name="app_name">Zaki</string>
     <string name="button_label_generate">Generate</string>
     <string name="button_label_replay">Replay</string>
+    <string name="button_label_large">Large</string>
+    <string name="button_label_small">Small</string>
 
-    <string name="str_no_solutions">No solutions found</string>
-    <string name="str_solutions">Found %d solutions:</string>
+    <string name="str_no_solutions">No solutions found.</string>
+
+    <plurals name="str_solutions">
+        <item quantity="one">Found only %d solution.</item>
+        <item quantity="other">Found %d solutions.</item>
+    </plurals>
 
 </resources>

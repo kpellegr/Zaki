@@ -20,7 +20,7 @@ public class Solver {
                 try {
                     if (root.evaluate() == (float)target) {
                         solutions.add(root);
-                    };
+                    }
                     //Log.d("Node", String.format("%s = %.2f", root.toString(), result));
                 } catch (ArithmeticException e) {
                     // ignore divisions by zero...
@@ -53,7 +53,7 @@ public class Solver {
         } else {
             int i = 0;
             while (i < arr.size()) {
-                if (used[i] || i > 0 && arr.get(i) == arr.get(i - 1) && !used[i - 1]) {
+                if (used[i] || i > 0 && arr.get(i).equals(arr.get(i - 1)) && !used[i - 1]) {
                     // If element is already used
                     i++;
                     continue;

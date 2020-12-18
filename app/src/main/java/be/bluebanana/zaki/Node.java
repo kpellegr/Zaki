@@ -1,5 +1,7 @@
 package be.bluebanana.zaki;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +9,8 @@ public class Node {
     private static final Operator[] OPERATORS = {Operator.ADD, Operator.SUB, Operator.MUL, Operator.DIV};
     private final Operator operator;
     private final float value;
-    private Node leftTree;
-    private Node rightTree;
+    private final Node leftTree;
+    private final Node rightTree;
 
     private Node parent;
 
@@ -72,16 +74,8 @@ public class Node {
         return leftTree;
     }
 
-    private void setLeftTree(Node leftTree) {
-        this.leftTree = leftTree;
-    }
-
     public Node getRightTree() {
         return rightTree;
-    }
-
-    private void setRightTree(Node rightTree) {
-        this.rightTree = rightTree;
     }
 
     public Operator getOperator() {
@@ -115,7 +109,9 @@ public class Node {
         return (parent == null);
     }
 
+    @NonNull
     public String toString() {
+        // TODO: Use MathView to generate beautiful formulas
         StringBuilder sb = new StringBuilder();
 
         if (this.isLeaf()) {
@@ -140,8 +136,6 @@ public class Node {
     }
 
     public float evaluate() {
-        float result = 0.0f;
-
         if (!isLeaf()) {
             float a = getLeftTree().evaluate();
             float b = getRightTree().evaluate();

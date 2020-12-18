@@ -1,7 +1,5 @@
 package be.bluebanana.zaki;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -15,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class NumbersViewModel extends ViewModel {
 
-    public enum GameState {INIT, PICKING, SET_TARGET, CALCULATING, TIMER_GONE, REPLAY}
+    public enum GameState {INIT, PICKING, SET_TARGET, CALCULATING, TIMER_GONE}
 
     private static final int NUMBER_OF_NUMBERS = 6;
     public static final int NUMBER_SMALL = 1001;
@@ -33,13 +31,13 @@ public class NumbersViewModel extends ViewModel {
 
 
     public NumbersViewModel() {
-        state = new MutableLiveData<GameState>();
-        currentCard = new MutableLiveData<Integer>();
-        target = new MutableLiveData<Integer>();
-        numbers = new MutableLiveData<List<Integer>>();
-        timer = new MutableLiveData<Integer>();
+        state = new MutableLiveData<>();
+        currentCard = new MutableLiveData<>();
+        target = new MutableLiveData<>();
+        numbers = new MutableLiveData<>();
+        timer = new MutableLiveData<>();
 
-        solutions = new MutableLiveData<List<Node>>();
+        solutions = new MutableLiveData<>();
 
         restartGame();
     }
@@ -59,11 +57,11 @@ public class NumbersViewModel extends ViewModel {
         // Create the numbers list
         numberArray = new ArrayList<>();
         for (int i = 0; i<NUMBER_OF_NUMBERS; i++) {
-            numberArray.add(0); // initalize the numbers to zero to start
+            numberArray.add(0); // initialize the numbers to zero to start
         }
         numbers.setValue(numberArray);
 
-        solutions.setValue(new ArrayList<Node>());
+        solutions.setValue(new ArrayList<>());
 
         // Move the state to "picking"
         state.setValue(GameState.PICKING);
@@ -99,11 +97,11 @@ public class NumbersViewModel extends ViewModel {
         if (type == NUMBER_LARGE) {
             new_number = (rand.nextInt(3) + 1) * 25; // pick 25, 50, 75 or 100
         }
-        getNumbers(); // make sure the array is initialised...
         numberArray.set(index, new_number);
         numbers.setValue(numberArray);
     }
 
+    @SuppressWarnings("unused")
     public MutableLiveData<Integer> getCurrentCard () {
         return currentCard;
     }
@@ -138,12 +136,9 @@ public class NumbersViewModel extends ViewModel {
         }, 0, 100);
 
         ExecutorService service =  Executors.newSingleThreadExecutor();
-        service.submit(new Runnable() {
-            @Override
-            public void run() {
-                List<Node> newSolutions = Solver.solve(getNumbers().getValue(), getTarget().getValue());
-                solutions.postValue(newSolutions);
-            }
+        service.submit(() -> {
+            List<Node> newSolutions = Solver.solve(getNumbers().getValue(), getTarget().getValue());
+            solutions.postValue(newSolutions);
         });
 
     }

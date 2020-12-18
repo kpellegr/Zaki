@@ -3,6 +3,7 @@ package be.bluebanana.zaki;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,15 +13,14 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
-import static java.lang.Integer.max;
 import static java.lang.Math.min;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final int MAXSOLUTIONS = 3;
+    private static final int MAX_SOLUTIONS = 3; // TODO: put this in settings file
+    private static final Locale locale = Resources.getSystem().getConfiguration().getLocales().get(0);
 
     private final TextView[] numberViewArray = new TextView[6];
 
@@ -28,34 +28,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         NumbersViewModel model = new ViewModelProvider(this).get(NumbersViewModel.class);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        ViewGroup gridLayout = (ViewGroup)findViewById(R.id.NumberCardContainer);
+        ViewGroup gridLayout = (ViewGroup)findViewById(R.id.number_card_container);
 
         // Create the grid view first
-        // Create the six number cards in the gridview
+        // Create the six number cards in the grid view
         for (int i=0; i<6; i++) {
             TextView tv = (TextView)inflater.inflate(R.layout.view_number_card, gridLayout, false);
-            tv.setText(String.format("%d", i+1));
+            tv.setText(String.format(locale, "%d", i+1));
             gridLayout.addView(tv);
             numberViewArray[i] = tv;
         }
 
         model.getNumbers().observe(this, numbers -> {
             for (int i=0; i<6; i++) {
-                numberViewArray[i].setText(String.format("%d", numbers.get(i)));
+                numberViewArray[i].setText(String.format(locale, "%d", numbers.get(i)));
             }
         });
 
         // Now create the target number
         TextView targetView = (TextView)findViewById(R.id.target_number_view);
-        model.getTarget().observe(this, target -> {
-                targetView.setText(String.format("%d", target));
-            }
+        model.getTarget().observe(this, target -> targetView.setText(String.format(locale, "%d", target))
         );
 
         // Observe the solutions
+        // TODO: move this off-screen
         TextView sv = findViewById(R.id.solutions_view);
         model.getSolutions().observe(this, solutions -> {
             if (solutions.size() == 0) {
@@ -63,49 +63,39 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Node", "No solutions found...");
             }
             else {
-                sv.setText(getString(R.string.str_solutions, solutions.size()));
-                for (int i = 0; i < min(MAXSOLUTIONS, solutions.size()); i++) {
-                    sv.append(String.format("\n%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
+                Resources res = getResources();
+                sv.setText(res.getQuantityString(R.plurals.str_solutions, solutions.size(), solutions.size()));
+                for (int i = 0; i < min(MAX_SOLUTIONS, solutions.size()); i++) {
+                    sv.append(String.format(locale, "\n%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
                     Log.d("Node", String.format("%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
                 }
             }
         });
 
         // Finally, create the button view
-        ViewGroup buttonLayout = (ViewGroup)findViewById(R.id.ButtonContainer);
-        buttonLayout.findViewById(R.id.button_smallinc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.generateCard(NumbersViewModel.NUMBER_SMALL);
+        ViewGroup buttonLayout = (ViewGroup)findViewById(R.id.button_container);
+        buttonLayout.findViewById(R.id.button_small_inc).setOnClickListener(v -> model.generateCard(NumbersViewModel.NUMBER_SMALL));
+        buttonLayout.findViewById(R.id.button_large_inc).setOnClickListener(v -> model.generateCard(NumbersViewModel.NUMBER_LARGE));
+
+        buttonLayout.findViewById(R.id.button_generate_target).setOnClickListener(v -> {
+            if (model.getState().getValue() == NumbersViewModel.GameState.TIMER_GONE) {
+                // replay
+                model.restartGame();
+                return;
             }
-        });
-        buttonLayout.findViewById(R.id.button_largeinc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                model.generateCard(NumbersViewModel.NUMBER_LARGE);
-            }
+            model.generateTarget();
+            // print the solutions
+            model.solveForTarget();
         });
 
-        buttonLayout.findViewById(R.id.button_generate_target).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (model.getState().getValue() == NumbersViewModel.GameState.TIMER_GONE) {
-                    // replay
-                    model.restartGame();
-                    return;
-                }
-                model.generateTarget();
-                // print the solutions
-                model.solveForTarget();
-            }
-        });
-
+        // TODO: play music
+        // TODO: put timer in settings
         ProgressBar pb = findViewById(R.id.progress_bar);
         model.getTimer().observe(this, pb::setProgress);
 
         model.getState().observe(this, state -> {
-            Button smallInc = buttonLayout.findViewById(R.id.button_smallinc);
-            Button largeInc = buttonLayout.findViewById(R.id.button_largeinc);
+            Button smallInc = buttonLayout.findViewById(R.id.button_small_inc);
+            Button largeInc = buttonLayout.findViewById(R.id.button_large_inc);
             Button generate = buttonLayout.findViewById(R.id.button_generate_target);
 
             switch (state) {

@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <GridLayout
-        android:id="@+id/NumberCardContainer"
+        android:id="@+id/number_card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,13 +20,13 @@
     </GridLayout>
 
     <LinearLayout
-        android:id="@+id/TargetNumberContainer"
+        android:id="@+id/target_number_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/NumberCardContainer"
-        app:layout_constraintBottom_toTopOf="@id/ButtonContainer"
+        app:layout_constraintTop_toBottomOf="@id/number_card_container"
+        app:layout_constraintBottom_toTopOf="@id/button_container"
         tools:context=".TargetNumberFragment">
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_horizontal"
-            android:text="000"
+            android:text=""
             style="@style/NumberCard"/>
 
         <ProgressBar
@@ -66,7 +66,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ButtonContainer"
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,12 +75,12 @@
         tools:context=".ButtonFragment">
 
         <Button
-            android:id="@+id/button_smallinc"
+            android:id="@+id/button_small_inc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:text="Small" />
+            android:text="@string/button_label_small" />
 
         <Button
             android:id="@+id/button_generate_target"
@@ -89,15 +89,15 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:visibility="invisible"
-            android:text="Generate" />
+            android:text="@string/button_label_generate" />
 
         <Button
-            android:id="@+id/button_largeinc"
+            android:id="@+id/button_large_inc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
-            android:text="Large" />
+            android:text="@string/button_label_large" />
 
     </LinearLayout>
 
