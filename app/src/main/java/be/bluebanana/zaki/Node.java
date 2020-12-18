@@ -7,12 +7,16 @@ public class Node {
     private static final Operator[] OPERATORS = {Operator.ADD, Operator.SUB, Operator.MUL, Operator.DIV};
     private final Operator operator;
     private final float value;
-    private Node leftTree, rightTree;
+    private Node leftTree;
+    private Node rightTree;
+
+    private Node parent;
 
     // create a leaf node
     public Node(int value_) {
         leftTree = null;
         rightTree = null;
+        parent = null;
         operator = Operator.ADD;
         value = value_;
     }
@@ -21,9 +25,21 @@ public class Node {
     public Node(Node left, Node right, Operator operator) {
         leftTree = left;
         rightTree = right;
+        if (left != null) left.setParent(this);
+        if (right != null) right.setParent(this);
+
         this.operator = operator;
         this.value = 0;
     }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
 
     public static List<Node> getAllTrees(List<Integer> numbers) {
         ArrayList<Node> list = new ArrayList<>();
@@ -95,17 +111,29 @@ public class Node {
         return (this.getLeftTree() == null) || (this.getRightTree() == null);
     }
 
+    public boolean isRoot() {
+        return (parent == null);
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        if ((this.getLeftTree() == null) || (this.getRightTree() == null)) {
-            sb.append(String.format("%.2f", getValue()));
+        if (this.isLeaf()) {
+            sb.append(String.format("%.0f", getValue()));
         } else {
-            sb.append("(");
+
+            boolean needsNoParenthesis =
+                    (getOperator() == Operator.MUL)
+                    && (getOperator() != Operator.DIV)
+                    || isRoot()
+                    || (getParent().getOperator() == Operator.ADD)
+                    || (getParent().getOperator() == Operator.SUB);
+
+            if  (!needsNoParenthesis) sb.append("(");
             sb.append(this.getLeftTree().toString());
             sb.append(this.getOperatorAsChar());
             sb.append(this.getRightTree().toString());
-            sb.append(")");
+            if  (!needsNoParenthesis) sb.append(")");
         }
 
         return sb.toString();

@@ -20,6 +20,8 @@ import static java.lang.Math.min;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int MAXSOLUTIONS = 3;
+
     private final TextView[] numberViewArray = new TextView[6];
 
     @Override
@@ -62,8 +64,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 sv.setText(getString(R.string.str_solutions, solutions.size()));
-                for (int i = 0; i < min(3, solutions.size()); i++) {
-                    sv.append(String.format("\n%s", solutions.get(i).toString()));
+                for (int i = 0; i < min(MAXSOLUTIONS, solutions.size()); i++) {
+                    sv.append(String.format("\n%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
                     Log.d("Node", String.format("%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
                 }
             }

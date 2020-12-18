@@ -55,8 +55,10 @@
                 android:id="@+id/solutions_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:gravity="start"
                 android:visibility="invisible"
+                android:layout_marginStart="50dp"
+                android:lineSpacingMultiplier="1.2"
                 android:minLines="4"
                 android:text=""
                 />
