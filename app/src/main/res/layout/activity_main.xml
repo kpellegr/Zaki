@@ -1,104 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <GridLayout
-        android:id="@+id/number_card_container"
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:columnCount="3"
-        android:rowCount="2"
-        tools:context=".NumbersFragment">
-
-        <!-- 6 number cards are created programmatically -->
-    </GridLayout>
-
-    <LinearLayout
-        android:id="@+id/target_number_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/number_card_container"
-        app:layout_constraintBottom_toTopOf="@id/button_container"
-        tools:context=".TargetNumberFragment">
-
-        <TextView
-            android:id="@+id/target_number_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:text=""
-            style="@style/NumberCard"/>
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minWidth="200dp"
-            android:indeterminate="false"
-            android:progress="0"
-            android:max="100"/>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/solutions_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:visibility="invisible"
-                android:layout_marginStart="50dp"
-                android:lineSpacingMultiplier="1.2"
-                android:minLines="4"
-                android:text=""
-                />
-        </ScrollView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="horizontal"
-        tools:context=".ButtonFragment">
-
-        <Button
-            android:id="@+id/button_small_inc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:text="@string/button_label_small" />
-
-        <Button
-            android:id="@+id/button_generate_target"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:visibility="invisible"
-            android:text="@string/button_label_generate" />
-
-        <Button
-            android:id="@+id/button_large_inc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:text="@string/button_label_large" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        />
+</FrameLayout>

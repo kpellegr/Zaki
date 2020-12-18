@@ -12,4 +12,9 @@
         <item quantity="other">Found %d solutions.</item>
     </plurals>
 
+
+    <string name="play_music_preference_label">Play muzak during calculation</string>
+    <string name="calculation_duration_preference_label">Thinking time (in seconds)</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

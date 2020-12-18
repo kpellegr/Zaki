@@ -122,18 +122,23 @@ public class NumbersViewModel extends ViewModel {
         state.setValue(GameState.CALCULATING);
     }
 
-    public void solveForTarget() {
+    public void solveForTarget(int maxTime) {
         Timer t = new Timer();
+
+        float maxTimeMs = 1000.0f * maxTime; // convert to milliseconds
+        float freq = 5; // updates per second
+        int period = (int)(1000.0f / freq);
+
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (timer.getValue() > 100) {
+                if (timer.getValue() > maxTimeMs) {
                     state.postValue(GameState.TIMER_GONE);
                     this.cancel();
                 }
-                timer.postValue(timer.getValue() + 1);
+                timer.postValue(timer.getValue() + period);
             }
-        }, 0, 100);
+        }, 0, period);
 
         ExecutorService service =  Executors.newSingleThreadExecutor();
         service.submit(() -> {

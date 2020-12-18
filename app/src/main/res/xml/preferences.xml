@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="play_music_preference"
+        android:title="@string/play_music_preference_label" />
+
+    <SeekBarPreference
+        android:max="300"
+        android:defaultValue="60"
+        android:key="calculation_duration_preference"
+        android:title="calculation_duration_preference_label"/>
+
+</PreferenceScreen>
