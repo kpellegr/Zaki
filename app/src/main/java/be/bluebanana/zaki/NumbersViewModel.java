@@ -1,17 +1,21 @@
 package be.bluebanana.zaki;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class NumbersViewModel extends ViewModel {
 
-    public enum GameState {INIT, PICKING, SET_TARGET, CALCULATING, SOLVED, REPLAY}
+    public enum GameState {INIT, PICKING, SET_TARGET, CALCULATING, TIMER_GONE, REPLAY}
 
     private static final int NUMBER_OF_NUMBERS = 6;
     public static final int NUMBER_SMALL = 1001;
@@ -23,6 +27,7 @@ public class NumbersViewModel extends ViewModel {
     private final MutableLiveData<Integer> currentCard; // during the picking process, this holds the number of the card we're picking
     private final MutableLiveData<List<Node>> solutions; // holds the list with solution trees
     private final MutableLiveData<GameState> state;
+    private final MutableLiveData<Integer> timer;
 
     private final Random rand = new Random();
 
@@ -32,6 +37,7 @@ public class NumbersViewModel extends ViewModel {
         currentCard = new MutableLiveData<Integer>();
         target = new MutableLiveData<Integer>();
         numbers = new MutableLiveData<List<Integer>>();
+        timer = new MutableLiveData<Integer>();
 
         solutions = new MutableLiveData<List<Node>>();
 
@@ -44,6 +50,8 @@ public class NumbersViewModel extends ViewModel {
 
         // Hold the current card
         currentCard.setValue(0);
+
+        timer.setValue(0);
 
         // Hold the target value
         target.setValue(0); // initialize the target to zero to start
@@ -64,6 +72,11 @@ public class NumbersViewModel extends ViewModel {
     public MutableLiveData<List<Integer>> getNumbers()
     {
         return numbers;
+    }
+
+    public MutableLiveData<Integer> getTimer()
+    {
+        return timer;
     }
 
     public void generateCard(int type) {
@@ -112,12 +125,23 @@ public class NumbersViewModel extends ViewModel {
     }
 
     public void solveForTarget() {
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (timer.getValue() > 100) {
+                    state.postValue(GameState.TIMER_GONE);
+                    this.cancel();
+                }
+                timer.postValue(timer.getValue() + 1);
+            }
+        }, 0, 100);
+
         ExecutorService service =  Executors.newSingleThreadExecutor();
         service.submit(new Runnable() {
             @Override
             public void run() {
                 List<Node> newSolutions = Solver.solve(getNumbers().getValue(), getTarget().getValue());
-                state.postValue(GameState.SOLVED);
                 solutions.postValue(newSolutions);
             }
         });

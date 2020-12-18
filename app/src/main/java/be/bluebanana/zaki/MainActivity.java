@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -55,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
         // Observe the solutions
         TextView sv = findViewById(R.id.solutions_view);
         model.getSolutions().observe(this, solutions -> {
-            if (model.getState().getValue() != NumbersViewModel.GameState.SOLVED) return;
-
             if (solutions.size() == 0) {
                 sv.setText(getString(R.string.str_no_solutions));
                 Log.d("Node", "No solutions found...");
@@ -88,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         buttonLayout.findViewById(R.id.button_generate_target).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (model.getState().getValue() == NumbersViewModel.GameState.SOLVED) {
+                if (model.getState().getValue() == NumbersViewModel.GameState.TIMER_GONE) {
                     // replay
                     model.restartGame();
                     return;
@@ -98,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 model.solveForTarget();
             }
         });
+
+        ProgressBar pb = findViewById(R.id.progress_bar);
+        model.getTimer().observe(this, pb::setProgress);
 
         model.getState().observe(this, state -> {
             Button smallInc = buttonLayout.findViewById(R.id.button_smallinc);
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     smallInc.setVisibility(View.VISIBLE);
                     largeInc.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.INVISIBLE);
+                    sv.setVisibility(View.INVISIBLE);
                     sv.setText("");
                     break;
                 case PICKING:
@@ -123,7 +126,8 @@ public class MainActivity extends AppCompatActivity {
                     generate.setVisibility(View.INVISIBLE);
                     // add spinner
                     break;
-                case SOLVED:
+                case TIMER_GONE:
+                    sv.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.VISIBLE);
                     generate.setText(R.string.button_label_replay);
                     break;
