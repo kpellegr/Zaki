@@ -3,7 +3,11 @@ package be.bluebanana.zaki;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.ContentResolver;
 import android.content.res.Resources;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +17,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 
 import static java.lang.Math.min;
@@ -24,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
     private final TextView[] numberViewArray = new TextView[6];
 
+    private MediaPlayer mediaPlayer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +41,29 @@ public class MainActivity extends AppCompatActivity {
 
         LayoutInflater inflater = LayoutInflater.from(this);
         ViewGroup gridLayout = (ViewGroup)findViewById(R.id.number_card_container);
+
+        // Prepare the mediaplayer
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setAudioAttributes(
+                    new AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build());
+
+            String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + getPackageName() + File.separator + R.raw.musak_2;
+            Log.d("Sound", musicFile);
+            Uri uri = Uri.parse(musicFile);
+            mediaPlayer.setDataSource(getApplicationContext(), uri);
+
+            mediaPlayer.setLooping(true);
+            mediaPlayer.prepareAsync();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            // ignore for now
+        }
 
         // Create the grid view first
         // Create the six number cards in the grid view
@@ -115,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     generate.setText(R.string.button_label_generate);
                     break;
                 case CALCULATING:
+                    mediaPlayer.start();
                     generate.setVisibility(View.INVISIBLE);
                     // add spinner
                     break;
@@ -122,8 +154,15 @@ public class MainActivity extends AppCompatActivity {
                     sv.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.VISIBLE);
                     generate.setText(R.string.button_label_replay);
+                    mediaPlayer.pause();
                     break;
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.release();
     }
 }
