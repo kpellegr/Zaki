@@ -1,27 +1,12 @@
 package be.bluebanana.zaki;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
-import android.content.ContentResolver;
-import android.content.res.Resources;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
-
-import static java.lang.Math.min;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NumbersViewModel model = new ViewModelProvider(this).get(NumbersViewModel.class);
+        //NumbersViewModel model = new ViewModelProvider(this).get(NumbersViewModel.class);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -38,5 +23,30 @@ public class MainActivity extends AppCompatActivity {
                     .add(R.id.main_fragment_container, GamePlayFragment.class, null)
                     .commit();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.settings_menu_item) {
+            showSettingsScreen();
+            return true;
+        }
+        if (item.getItemId() == R.id.about_menu_item) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    void showSettingsScreen () {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
     }
 }

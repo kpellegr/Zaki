@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <SwitchPreference
         android:defaultValue="false"
@@ -9,7 +12,16 @@
     <SeekBarPreference
         android:max="300"
         android:defaultValue="60"
+        app:showSeekBarValue="true"
         android:key="calculation_duration_preference"
-        android:title="calculation_duration_preference_label"/>
+        android:title="@string/calculation_duration_preference_label"/>
+
+    <SeekBarPreference
+        android:max="100"
+        android:defaultValue="10"
+        app:showSeekBarValue="true"
+        android:key="number_of_solutions_preference"
+        android:title="@string/number_of_solutions_preference_label"/>
+
 
 </PreferenceScreen>

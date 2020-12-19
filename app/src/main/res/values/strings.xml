@@ -1,20 +1,29 @@
 <resources>
     <string name="app_name">Zaki</string>
+
+    <!-- GameFragment button labels -->
     <string name="button_label_generate">Generate</string>
     <string name="button_label_replay">Replay</string>
     <string name="button_label_large">Large</string>
     <string name="button_label_small">Small</string>
 
+    <!-- SolutionFragment labels -->
     <string name="str_no_solutions">No solutions found.</string>
-
     <plurals name="str_solutions">
         <item quantity="one">Found only %d solution.</item>
         <item quantity="other">Found %d solutions.</item>
     </plurals>
 
+    <!-- Main menu items -->
+    <string name="settings_menu_label">Settings</string>
+    <string name="about_menu_label">About</string>
 
+
+    <!-- Settings labels -->
     <string name="play_music_preference_label">Play muzak during calculation</string>
     <string name="calculation_duration_preference_label">Thinking time (in seconds)</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="number_of_solutions_preference_label">Number of solutions to show</string>
+
+    <string name="title_activity_settings">SettingsActivity</string>
+
 </resources>
