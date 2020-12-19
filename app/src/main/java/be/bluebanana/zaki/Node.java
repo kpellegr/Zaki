@@ -12,6 +12,8 @@ public class Node {
     private final Node leftTree;
     private final Node rightTree;
 
+    public enum MathFormat {PLAIN_TEXT, LATEX}
+
     private Node parent;
 
     // create a leaf node
@@ -111,7 +113,20 @@ public class Node {
 
     @NonNull
     public String toString() {
-        // TODO: Use MathView to generate beautiful formulas
+        return toString(MathFormat.PLAIN_TEXT);
+    }
+
+    @NonNull
+    public String toString(MathFormat format) {
+        switch (format) {
+            case LATEX: return toLateXString();
+            default: return toPlainTextString();
+        }
+
+    }
+
+    // Print the formula as plain text
+    public String toPlainTextString() {
         StringBuilder sb = new StringBuilder();
 
         if (this.isLeaf()) {
@@ -134,6 +149,41 @@ public class Node {
 
         return sb.toString();
     }
+
+    public String toLateXString() {
+        StringBuilder sb = new StringBuilder();
+
+        if (this.isLeaf()) {
+            sb.append(String.format("%.0f", getValue()));
+        } else {
+
+            boolean needsNoParenthesis =
+                    (getOperator() == Operator.MUL)
+                            && (getOperator() != Operator.DIV)
+                            || isRoot()
+                            || (getParent().getOperator() == Operator.ADD)
+                            || (getParent().getOperator() == Operator.SUB);
+
+            if  (!needsNoParenthesis) sb.append("(");
+
+            if (getOperator() == Operator.DIV) {
+                sb.append(String.format("\\frac{%s}{%s}",
+                        this.getLeftTree().toString(),
+                        this.getRightTree().toString()));
+            }
+            else {
+                sb.append(String.format("%s %c %s",
+                        this.getLeftTree().toString(),
+                        this.getOperatorAsChar(),
+                        this.getRightTree().toString()));
+
+            }
+            if (!needsNoParenthesis) sb.append(")");
+        }
+
+        return sb.toString();
+    }
+
 
     public float evaluate() {
         if (!isLeaf()) {

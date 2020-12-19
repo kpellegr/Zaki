@@ -23,6 +23,7 @@
     <string name="calculation_duration_preference_label">Thinking time</string>
     <string name="play_music_preference_label">Enable muzak</string>
     <string name="song_selection_preference_label">Pick a song</string>
+    <string name="solution_render_latex_preference_label">Render as LaTeX</string>
 
     <string name="title_activity_settings">SettingsActivity</string>
 

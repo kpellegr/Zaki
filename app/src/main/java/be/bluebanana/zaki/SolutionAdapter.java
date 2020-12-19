@@ -9,17 +9,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.agog.mathdisplay.MTMathView;
+
 import java.util.List;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.SolutionViewHolder> {
 
     final Activity context;
     final List<Node> solutionList;
+    final Node.MathFormat renderMode;
 
     public SolutionAdapter(Activity context, List<Node> solutionList) {
         this.context = context;
         this.solutionList = solutionList;
+        this.renderMode = Node.MathFormat.LATEX;
     }
+
+    public SolutionAdapter(Activity context, List<Node> solutionList, Node.MathFormat renderMode) {
+        this.context = context;
+        this.solutionList = solutionList;
+        this.renderMode = renderMode;
+    }
+
 
     @NonNull
     @Override
@@ -30,8 +41,16 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
 
     @Override
     public void onBindViewHolder(@NonNull SolutionViewHolder holder, int position) {
-        String solution = solutionList.get(position).toString();
-        holder.textView.setText(solution);
+        if (renderMode == Node.MathFormat.LATEX) {
+            holder.mathView.setLatex(solutionList.get(position).toString(Node.MathFormat.LATEX));
+            holder.mathView.setVisibility(View.VISIBLE);
+            holder.textView.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.textView.setText(solutionList.get(position).toString());
+            holder.textView.setVisibility(View.VISIBLE);
+            holder.mathView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -39,17 +58,17 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
         return solutionList.size();
     }
 
-    public static class SolutionViewHolder extends RecyclerView.ViewHolder {
+    static class SolutionViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
+        private final MTMathView mathView;
 
         public SolutionViewHolder(View view) {
             super(view);
             textView = (TextView) view.findViewById(R.id.solution_textview);
-        }
 
-        public TextView getTextView() {
-            return textView;
+            mathView = (MTMathView) view.findViewById(R.id.solution_mathview);
+            mathView.setFontSize(64.0f);
+            mathView.setLabelMode(MTMathView.MTMathViewMode.KMTMathViewModeDisplay);
         }
     }
-
 }

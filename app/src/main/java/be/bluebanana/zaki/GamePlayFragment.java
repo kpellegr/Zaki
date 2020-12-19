@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.agog.mathdisplay.MTMathView;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -70,7 +72,6 @@ public class GamePlayFragment extends Fragment {
 
         // Create the grid view first
         // Create the six number cards in the grid view
-
         ViewGroup cardGridLayout = (ViewGroup)rootView.findViewById(R.id.number_card_container);
         for (int i=0; i<6; i++) {
             View cardView = inflater.inflate(R.layout.view_number_card, cardGridLayout, false);

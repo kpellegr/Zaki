@@ -7,12 +7,19 @@
     <PreferenceCategory
         app:key="solver_category"
         app:title="Solving">
+
         <SeekBarPreference
             android:max="300"
             android:defaultValue="60"
             app:showSeekBarValue="true"
             android:key="calculation_duration_preference"
             android:title="@string/calculation_duration_preference_label"/>
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="solution_render_latex_preference"
+            android:title="@string/solution_render_latex_preference_label" />
+
 
     </PreferenceCategory>
 
