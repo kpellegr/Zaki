@@ -203,7 +203,7 @@ public class GamePlayFragment extends Fragment {
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build());
 
-            String songName = sharedPreferences.getString("song_selection_preference", "muzak_1.mp3");
+            String songName = sharedPreferences.getString("song_selection_preference", "muzak_1");
 
             String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
                     "://" + requireContext().getPackageName() + "/raw/" + songName;
