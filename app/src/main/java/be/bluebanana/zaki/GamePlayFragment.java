@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import static androidx.navigation.Navigation.findNavController;
@@ -63,31 +65,52 @@ public class GamePlayFragment extends Fragment {
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_game_play, container, false);
-        ViewGroup gridLayout = (ViewGroup)rootView.findViewById(R.id.number_card_container);
 
         reconfigureUI(); //initialize static UI elements that need to be redrawn after SettingsChange
 
         // Create the grid view first
         // Create the six number cards in the grid view
+
+        ViewGroup cardGridLayout = (ViewGroup)rootView.findViewById(R.id.number_card_container);
         for (int i=0; i<6; i++) {
-            TextView tv = (TextView)inflater.inflate(R.layout.view_number_card, gridLayout, false);
+            View cardView = inflater.inflate(R.layout.view_number_card, cardGridLayout, false);
+            TextView tv = cardView.findViewById(R.id.card_number_view);
             tv.setText(String.format(locale, "%d", i+1));
-            gridLayout.addView(tv);
+            cardGridLayout.addView(cardView);
             numberViewArray[i] = tv;
+
+            // The cards should observe "getNumbers" in the model
+            model.getNumbers().observe(getViewLifecycleOwner(),
+                    new MyIntObserver<List<Integer>>(i) {
+                        @Override
+                        public void onChanged(List<Integer> numbers) {
+                            tv.setText(String.format(locale, "%d", numbers.get(this.getBoundValue())));
+                        }
+                    });
+
         }
 
-        // The cards should observe "getNumbers" in the model
-        model.getNumbers().observe(getViewLifecycleOwner(), numbers -> {
-            for (int i=0; i<6; i++) {
-                numberViewArray[i].setText(String.format(locale, "%d", numbers.get(i)));
-            }
-        });
-
         // The target number should observe "getTarget" in the model
-        TextView targetView = (TextView)rootView.findViewById(R.id.target_number_view);
-        model.getTarget().observe(getViewLifecycleOwner(),
-                target -> targetView.setText(String.format(locale, "%d", target))
-        );
+        ViewGroup targetGridLayout = (ViewGroup)rootView.findViewById(R.id.target_card_container);
+        for (int i=0; i<3; i++) {
+            View cardView = inflater.inflate(R.layout.view_number_card, targetGridLayout, false);
+            TextView tv = cardView.findViewById(R.id.card_number_view);
+            //tv.setText(String.format(locale, "%d", i+1));
+            targetGridLayout.addView(cardView);
+
+            model.getTarget().observe(getViewLifecycleOwner(),
+                    new MyIntObserver<Integer>(i) {
+                        @Override
+                        public void onChanged(Integer target) {
+                            String strTarget = Integer.toString(target);
+                            char digit = getBoundValue() < strTarget.length() ?
+                                digit = Integer.toString(target).charAt(this.getBoundValue()) : '0';
+                            tv.setText(String.format(locale, "%c", digit));
+                        }
+                    }
+            );
+        }
+
 
         // Observe the number of solutions
         TextView sv = rootView.findViewById(R.id.solutions_view);
@@ -208,5 +231,18 @@ public class GamePlayFragment extends Fragment {
 
     boolean musicIsOn() {
         return sharedPreferences.getBoolean("play_music_preference", false);
+    }
+
+    private abstract static class MyIntObserver<T> implements Observer<T> {
+
+        int boundValue;
+
+        public MyIntObserver (int bindingValue) {
+            boundValue = bindingValue;
+        }
+
+        public int getBoundValue() {
+            return boundValue;
+        }
     }
 }

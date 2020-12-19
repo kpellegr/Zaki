@@ -14,47 +14,57 @@
         app:layout_constraintTop_toTopOf="parent"
         android:columnCount="3"
         android:rowCount="2"
-        tools:context=".NumbersFragment">
+        android:layout_centerHorizontal="true"
+        android:padding="20dp"
+        android:layout_marginTop="16dp"
 
+        android:alignmentMode="alignBounds"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true"
+        tools:context=".NumbersFragment">
         <!-- 6 number cards are created programmatically -->
     </GridLayout>
 
-    <LinearLayout
+    <GridLayout
+        android:id="@+id/target_card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/number_card_container"
-        app:layout_constraintBottom_toTopOf="@id/button_container"
-        tools:context=".TargetNumberFragment">
+        android:columnCount="3"
+        android:rowCount="1"
+        android:layout_gravity="center_horizontal"
+        android:padding="48dp"
+        android:layout_marginTop="12dp"
 
-        <TextView
-            android:id="@+id/target_number_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:text=""
-            style="@style/NumberCard"/>
+        android:alignmentMode="alignBounds"
+        android:rowOrderPreserved="false"
+        android:useDefaultMargins="true"
+        tools:context=".NumbersFragment">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minWidth="200dp"
-            android:indeterminate="false"
-            android:progress="0"
-            android:max="100"/>
+        <!-- 3 target cards are created programmatically -->
+    </GridLayout>
 
-        <TextView
-            android:id="@+id/solutions_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:visibility="invisible"
-            android:text=""
-            />
-    </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/target_card_container"
+        android:minWidth="200dp"
+        android:indeterminate="false"
+        android:progress="0"
+        android:max="100"/>
+
+    <TextView
+        android:id="@+id/solutions_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/progress_bar"
+        android:visibility="invisible"
+        android:text=""
+        />
 
     <LinearLayout
         android:id="@+id/button_container"
