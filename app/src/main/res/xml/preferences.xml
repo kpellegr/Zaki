@@ -20,7 +20,6 @@
             android:key="solution_render_latex_preference"
             android:title="@string/solution_render_latex_preference_label" />
 
-
     </PreferenceCategory>
 
     <PreferenceCategory

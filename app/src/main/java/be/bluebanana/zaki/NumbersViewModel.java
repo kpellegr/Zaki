@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class NumbersViewModel extends ViewModel {
 
-    public enum GameState {INIT, PICKING, SET_TARGET, CALCULATING, TIMER_GONE}
+    public enum GameState {INIT, READY_FOR_PICKING, PICKING, SET_TARGET, CALCULATING, TIMER_GONE}
 
     private static final int NUMBER_OF_NUMBERS = 6;
     public static final int NUMBER_SMALL = 1001;
@@ -52,19 +52,19 @@ public class NumbersViewModel extends ViewModel {
         timer.setValue(0);
 
         // Hold the target value
-        target.setValue(0); // initialize the target to zero to start
+        target.setValue(-1); // set the target to "uninitialized" to start
 
         // Create the numbers list
         numberArray = new ArrayList<>();
         for (int i = 0; i<NUMBER_OF_NUMBERS; i++) {
-            numberArray.add(0); // initialize the numbers to zero to start
+            numberArray.add(-1); // set the numbers to "uninitialized" to start
         }
         numbers.setValue(numberArray);
 
         solutions.setValue(new ArrayList<>());
 
         // Move the state to "picking"
-        state.setValue(GameState.PICKING);
+        state.setValue(GameState.READY_FOR_PICKING);
     }
 
     public MutableLiveData<List<Integer>> getNumbers()
@@ -79,13 +79,16 @@ public class NumbersViewModel extends ViewModel {
 
     public void generateCard(int type) {
         int currentValue = (currentCard.getValue() != null) ? currentCard.getValue() : 0;
-        if (currentValue >= NUMBER_OF_NUMBERS) { return; }
+        if (currentValue == 0) {
+            state.setValue(GameState.PICKING);  // we started the picking process
+        }
 
-        generateCard(type, currentValue);
-        currentCard.setValue(currentValue + 1);
-
-        if (currentCard.getValue() == NUMBER_OF_NUMBERS) {
-            state.setValue(GameState.SET_TARGET);
+        if (currentValue <= NUMBER_OF_NUMBERS) {
+            generateCard(type, currentValue);
+            currentCard.setValue(currentValue + 1);
+        }
+        if (currentCard.getValue() >= NUMBER_OF_NUMBERS) {
+            state.setValue(GameState.SET_TARGET);  // picking is done!
         }
     }
 

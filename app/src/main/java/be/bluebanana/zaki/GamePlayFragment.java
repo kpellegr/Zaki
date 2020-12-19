@@ -17,6 +17,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import static androidx.navigation.Navigation.findNavController;
 
@@ -37,9 +40,11 @@ public class GamePlayFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private NumbersViewModel model;
     private View rootView;
+    private Random random;
 
     public GamePlayFragment() {
         // Required empty public constructor
+        random = new Random();
     }
 
     public static GamePlayFragment newInstance() {
@@ -69,7 +74,7 @@ public class GamePlayFragment extends Fragment {
         for (int i=0; i<6; i++) {
             View cardView = inflater.inflate(R.layout.number_card_view, cardGridLayout, false);
             TextView tv = cardView.findViewById(R.id.card_number_view);
-            tv.setText(String.format(locale, "%d", i+1));
+            tv.setText("");
             cardGridLayout.addView(cardView);
 
             // The cards should observe "getNumbers" in the model
@@ -77,10 +82,23 @@ public class GamePlayFragment extends Fragment {
                     new MyIntObserver<List<Integer>>(i) {
                         @Override
                         public void onChanged(List<Integer> numbers) {
-                            tv.setText(String.format(locale, "%d", numbers.get(this.getBoundValue())));
+                            int value = numbers.get(this.getBoundValue());
+                            if (model.getCurrentCard().getValue() == null) return;
+
+                            switch (model.getState().getValue()) {
+                                case INIT:
+                                case READY_FOR_PICKING:
+                                    cardView.setVisibility(View.INVISIBLE);
+                                    break;
+                                case PICKING:
+                                    if (this.getBoundValue() == model.getCurrentCard().getValue()) {
+                                        cardView.setVisibility(View.VISIBLE);
+                                        swipeCardIn(cardView);
+                                    }
+                            }
+                            tv.setText((value < 0) ? "" : String.format(locale, "%d", value));
                         }
                     });
-
         }
 
         // The target number should observe "getTarget" in the model
@@ -95,6 +113,11 @@ public class GamePlayFragment extends Fragment {
                     new MyIntObserver<Integer>(i) {
                         @Override
                         public void onChanged(Integer target) {
+                            if (target < 0) {
+                                tv.setText("");
+                                return;
+                            }
+
                             String strTarget = Integer.toString(target);
                             char digit = (getBoundValue() < strTarget.length()) ?
                                 strTarget.charAt(this.getBoundValue()) : '0';
@@ -207,8 +230,7 @@ public class GamePlayFragment extends Fragment {
 
             String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
                     "://" + requireContext().getPackageName() + "/raw/" + songName;
-            Log.d("GPFragment", "Playing song " + songName);
-            Log.d("Sound", musicFile);
+
             Uri uri = Uri.parse(musicFile);
             mediaPlayer.setDataSource(getContext(), uri);
 
@@ -223,6 +245,17 @@ public class GamePlayFragment extends Fragment {
 
     boolean musicIsOn() {
         return sharedPreferences.getBoolean("play_music_preference", false);
+    }
+
+    void swipeCardIn (View v) {
+        String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + requireContext().getPackageName() + "/raw/dealing_card";
+
+        MediaPlayer mp = MediaPlayer.create(getContext(), Uri.parse(musicFile));
+        mp.start();
+        int ANIM_ID = ((random.nextInt() % 2) == 0) ? R.anim.swing_up_left : R.anim.swing_up_right;
+        Animation animation = AnimationUtils.loadAnimation(getContext(), ANIM_ID);
+        v.startAnimation(animation);
     }
 
     private abstract static class MyIntObserver<T> implements Observer<T> {

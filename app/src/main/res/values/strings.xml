@@ -27,4 +27,6 @@
 
     <string name="title_activity_settings">SettingsActivity</string>
 
+    <!-- Animation variable -->
+    <integer name="swing_anim_time">750</integer>
 </resources>
