@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.agog.mathdisplay.MTMathView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.SolutionViewHolder> {
@@ -41,6 +43,7 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
 
     @Override
     public void onBindViewHolder(@NonNull SolutionViewHolder holder, int position) {
+        holder.solutionCounter.setText(Integer.toString(position + 1));
         if (renderMode == Node.MathFormat.LATEX) {
             holder.mathView.setLatex(solutionList.get(position).toString(Node.MathFormat.LATEX));
             holder.mathView.setVisibility(View.VISIBLE);
@@ -59,11 +62,14 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
     }
 
     static class SolutionViewHolder extends RecyclerView.ViewHolder {
+        private final TextView solutionCounter;
         private final TextView textView;
         private final MTMathView mathView;
 
         public SolutionViewHolder(View view) {
             super(view);
+            solutionCounter = (TextView) view.findViewById(R.id.solution_counter_view);
+
             textView = (TextView) view.findViewById(R.id.solution_text_view);
 
             mathView = (MTMathView) view.findViewById(R.id.solution_math_view);
