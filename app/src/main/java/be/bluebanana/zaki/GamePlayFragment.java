@@ -67,7 +67,7 @@ public class GamePlayFragment extends Fragment {
         // Create the six number cards in the grid view
         ViewGroup cardGridLayout = (ViewGroup)rootView.findViewById(R.id.number_card_container);
         for (int i=0; i<6; i++) {
-            View cardView = inflater.inflate(R.layout.view_number_card, cardGridLayout, false);
+            View cardView = inflater.inflate(R.layout.number_card_view, cardGridLayout, false);
             TextView tv = cardView.findViewById(R.id.card_number_view);
             tv.setText(String.format(locale, "%d", i+1));
             cardGridLayout.addView(cardView);
@@ -86,7 +86,7 @@ public class GamePlayFragment extends Fragment {
         // The target number should observe "getTarget" in the model
         ViewGroup targetGridLayout = (ViewGroup)rootView.findViewById(R.id.target_card_container);
         for (int i=0; i<3; i++) {
-            View cardView = inflater.inflate(R.layout.view_number_card, targetGridLayout, false);
+            View cardView = inflater.inflate(R.layout.number_card_view, targetGridLayout, false);
             TextView tv = cardView.findViewById(R.id.card_number_view);
             //tv.setText(String.format(locale, "%d", i+1));
             targetGridLayout.addView(cardView);

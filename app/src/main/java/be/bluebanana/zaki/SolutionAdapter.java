@@ -44,12 +44,12 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
         if (renderMode == Node.MathFormat.LATEX) {
             holder.mathView.setLatex(solutionList.get(position).toString(Node.MathFormat.LATEX));
             holder.mathView.setVisibility(View.VISIBLE);
-            holder.textView.setVisibility(View.INVISIBLE);
+            holder.textView.setVisibility(View.GONE);
         }
         else {
             holder.textView.setText(solutionList.get(position).toString());
             holder.textView.setVisibility(View.VISIBLE);
-            holder.mathView.setVisibility(View.INVISIBLE);
+            holder.mathView.setVisibility(View.GONE);
         }
     }
 
