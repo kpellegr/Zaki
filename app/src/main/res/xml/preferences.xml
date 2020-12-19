@@ -14,13 +14,6 @@
             android:key="calculation_duration_preference"
             android:title="@string/calculation_duration_preference_label"/>
 
-        <SeekBarPreference
-            android:max="20"
-            android:defaultValue="10"
-            app:showSeekBarValue="true"
-            android:key="number_of_solutions_preference"
-            android:title="@string/number_of_solutions_preference_label"
-            android:summary="Set the amount of solutions that are shown by the app."/>
     </PreferenceCategory>
 
     <PreferenceCategory

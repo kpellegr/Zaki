@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
@@ -20,16 +21,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 
-import static java.lang.Math.min;
-
 public class GamePlayFragment extends Fragment {
 
-    private static final int SHOW_SOLUTIONS = 3; // TODO: put this in settings file
-    private static final int MAX_SOLUTION_TIME = 60; // TODO: put this in settings file
+    private static final int MAX_SOLUTION_TIME = 60;
     private static final Locale locale = Resources.getSystem().getConfiguration().getLocales().get(0);
 
     private final TextView[] numberViewArray = new TextView[6];
@@ -56,8 +53,8 @@ public class GamePlayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        model = new ViewModelProvider(this).get(NumbersViewModel.class);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        model = new ViewModelProvider(requireActivity()).get(NumbersViewModel.class);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_game_play, container, false);
@@ -87,25 +84,24 @@ public class GamePlayFragment extends Fragment {
                 target -> targetView.setText(String.format(locale, "%d", target))
         );
 
-        // Observe the solutions
-        // TODO: move this off-screen
+        // Observe the number of solutions
         TextView sv = rootView.findViewById(R.id.solutions_view);
         model.getSolutions().observe(getViewLifecycleOwner(), solutions -> {
             if (solutions.size() == 0) {
                 sv.setText(getString(R.string.str_no_solutions));
-                Log.d("Node", "No solutions found...");
             }
             else {
                 Resources res = getResources();
                 sv.setText(res.getQuantityString(R.plurals.str_solutions, solutions.size(), solutions.size()));
-
-                int max_solutions = sharedPreferences.getInt("number_of_solutions_preference", SHOW_SOLUTIONS);
-                Log.d("Node", String.format("Show max %d solutions", max_solutions));
-                for (int i = 0; i < min(max_solutions, solutions.size()); i++) {
-                    sv.append(String.format(locale, "\n%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
-                    Log.d("Node", String.format("%s = %d", solutions.get(i).toString(), model.getTarget().getValue()));
-                }
             }
+        });
+        sv.setOnClickListener(v -> {
+            FragmentManager fragmentManager = getParentFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_fragment_container, SolutionsFragment.class, null)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("name") // name can be null
+                    .commit();
         });
 
         // Finally, create the button view
@@ -122,8 +118,6 @@ public class GamePlayFragment extends Fragment {
             model.generateTarget();
             model.solveForTarget(sharedPreferences.getInt("calculation_duration_preference", MAX_SOLUTION_TIME));
         });
-
-        // TODO: add music choices to settings
 
         // Observe the game's state machine and adapt the layout accordingly
         model.getState().observe(getViewLifecycleOwner(), state -> {
@@ -197,7 +191,7 @@ public class GamePlayFragment extends Fragment {
             String songName = sharedPreferences.getString("song_selection_preference", "muzak_1.mp3");
 
             String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + getContext().getPackageName() + "/raw/" + songName;
+                    "://" + requireContext().getPackageName() + "/raw/" + songName;
             Log.d("GPFragment", "Playing song " + songName);
             Log.d("Sound", musicFile);
             Uri uri = Uri.parse(musicFile);
