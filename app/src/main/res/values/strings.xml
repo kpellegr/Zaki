@@ -20,9 +20,10 @@
 
 
     <!-- Settings labels -->
-    <string name="play_music_preference_label">Play muzak during calculation</string>
-    <string name="calculation_duration_preference_label">Thinking time (in seconds)</string>
-    <string name="number_of_solutions_preference_label">Number of solutions to show</string>
+    <string name="calculation_duration_preference_label">Thinking time</string>
+    <string name="number_of_solutions_preference_label">Solutions to show</string>
+    <string name="play_music_preference_label">Enable muzak</string>
+    <string name="song_selection_preference_label">Pick a song</string>
 
     <string name="title_activity_settings">SettingsActivity</string>
 

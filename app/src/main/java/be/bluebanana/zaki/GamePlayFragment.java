@@ -187,14 +187,18 @@ public class GamePlayFragment extends Fragment {
         if (!musicIsOn()) return;
 
         try {
+            mediaPlayer.reset();
             mediaPlayer.setAudioAttributes(
                     new AudioAttributes.Builder()
                             .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                             .setUsage(AudioAttributes.USAGE_MEDIA)
                             .build());
 
+            String songName = sharedPreferences.getString("song_selection_preference", "muzak_1.mp3");
+
             String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + getContext().getPackageName() + File.separator + R.raw.muzak_3;
+                    "://" + getContext().getPackageName() + "/raw/" + songName;
+            Log.d("GPFragment", "Playing song " + songName);
             Log.d("Sound", musicFile);
             Uri uri = Uri.parse(musicFile);
             mediaPlayer.setDataSource(getContext(), uri);

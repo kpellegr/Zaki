@@ -4,24 +4,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="play_music_preference"
-        android:title="@string/play_music_preference_label" />
+    <PreferenceCategory
+        app:key="solver_category"
+        app:title="Solving">
+        <SeekBarPreference
+            android:max="300"
+            android:defaultValue="60"
+            app:showSeekBarValue="true"
+            android:key="calculation_duration_preference"
+            android:title="@string/calculation_duration_preference_label"/>
 
-    <SeekBarPreference
-        android:max="300"
-        android:defaultValue="60"
-        app:showSeekBarValue="true"
-        android:key="calculation_duration_preference"
-        android:title="@string/calculation_duration_preference_label"/>
+        <SeekBarPreference
+            android:max="20"
+            android:defaultValue="10"
+            app:showSeekBarValue="true"
+            android:key="number_of_solutions_preference"
+            android:title="@string/number_of_solutions_preference_label"
+            android:summary="Set the amount of solutions that are shown by the app."/>
+    </PreferenceCategory>
 
-    <SeekBarPreference
-        android:max="100"
-        android:defaultValue="10"
-        app:showSeekBarValue="true"
-        android:key="number_of_solutions_preference"
-        android:title="@string/number_of_solutions_preference_label"/>
+    <PreferenceCategory
+        app:key="music_category"
+        app:title="Music">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="play_music_preference"
+            android:title="@string/play_music_preference_label" />
+
+        <DropDownPreference
+            android:key="song_selection_preference"
+            android:title="@string/song_selection_preference_label"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
