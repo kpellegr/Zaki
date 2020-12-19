@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 
 public class NumbersViewModel extends ViewModel {
 
-    public enum GameState {INIT, READY_FOR_PICKING, PICKING, SET_TARGET, CALCULATING, TIMER_GONE}
+    public enum GameState {INIT, READY_FOR_PICKING, PICKING, SET_TARGET, CALCULATING, TIMER_GONE, REVIEW}
 
     private static final int NUMBER_OF_NUMBERS = 6;
     public static final int NUMBER_SMALL = 1001;
@@ -119,6 +119,8 @@ public class NumbersViewModel extends ViewModel {
     }
 
     public MutableLiveData<GameState> getState () { return state; }
+
+    public void setState (GameState newState) { state.setValue(newState); }
 
     public void generateTarget() {
         target.setValue(rand.nextInt(900) + 100); // generate a number between 100 and 999

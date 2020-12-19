@@ -40,7 +40,8 @@ public class GamePlayFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private NumbersViewModel model;
     private View rootView;
-    private Random random;
+    private final Random random;
+    private MediaPlayer swipeMP, bellMP;
 
     public GamePlayFragment() {
         // Required empty public constructor
@@ -67,6 +68,10 @@ public class GamePlayFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_game_play, container, false);
 
         reconfigureUI(); //initialize static UI elements that need to be redrawn after SettingsChange
+
+        swipeMP = MediaPlayer.create(getContext(), getMediaPath("dealing_card"));
+        bellMP = MediaPlayer.create(getContext(), getMediaPath("bell"));
+
 
         // Create the grid view first
         // Create the six number cards in the grid view
@@ -146,7 +151,7 @@ public class GamePlayFragment extends Fragment {
         buttonLayout.findViewById(R.id.button_large_inc).setOnClickListener(v -> model.generateCard(NumbersViewModel.NUMBER_LARGE));
 
         buttonLayout.findViewById(R.id.button_generate_target).setOnClickListener(v -> {
-            if (model.getState().getValue() == NumbersViewModel.GameState.TIMER_GONE) {
+            if (model.getState().getValue() == NumbersViewModel.GameState.REVIEW) {
                 // replay
                 model.restartGame();
                 return;
@@ -182,13 +187,19 @@ public class GamePlayFragment extends Fragment {
                     generate.setVisibility(View.INVISIBLE);
                     break;
                 case TIMER_GONE:
+                    if (musicIsOn()) {
+                        mediaPlayer.pause();
+                        bellMP.start();
+                    }
+                    model.setState(NumbersViewModel.GameState.REVIEW);
+                case REVIEW:
                     smallInc.setVisibility(View.INVISIBLE);
                     largeInc.setVisibility(View.INVISIBLE);
                     sv.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.VISIBLE);
                     generate.setText(R.string.button_label_replay);
-                    if (musicIsOn()) mediaPlayer.pause();
                     break;
+
             }
         });
 
@@ -227,12 +238,7 @@ public class GamePlayFragment extends Fragment {
                             .build());
 
             String songName = sharedPreferences.getString("song_selection_preference", "muzak_1");
-
-            String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
-                    "://" + requireContext().getPackageName() + "/raw/" + songName;
-
-            Uri uri = Uri.parse(musicFile);
-            mediaPlayer.setDataSource(getContext(), uri);
+            mediaPlayer.setDataSource(getContext(), getMediaPath(songName));
 
             mediaPlayer.setLooping(true);
             mediaPlayer.prepareAsync();
@@ -247,12 +253,13 @@ public class GamePlayFragment extends Fragment {
         return sharedPreferences.getBoolean("play_music_preference", false);
     }
 
-    void swipeCardIn (View v) {
-        String musicFile = ContentResolver.SCHEME_ANDROID_RESOURCE +
-                "://" + requireContext().getPackageName() + "/raw/dealing_card";
+    Uri getMediaPath (String fileName) {
+        return Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + requireContext().getPackageName() + "/raw/" + fileName);
+    }
 
-        MediaPlayer mp = MediaPlayer.create(getContext(), Uri.parse(musicFile));
-        mp.start();
+    void swipeCardIn (View v) {
+        swipeMP.start();
         int ANIM_ID = ((random.nextInt() % 2) == 0) ? R.anim.swing_up_left : R.anim.swing_up_right;
         Animation animation = AnimationUtils.loadAnimation(getContext(), ANIM_ID);
         v.startAnimation(animation);
