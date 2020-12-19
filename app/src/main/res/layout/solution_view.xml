@@ -10,8 +10,8 @@
         android:id="@+id/solution_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/cardview_default_elevation"
-        android:textSize="14sp"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
         android:gravity="start"
         />
 </LinearLayout>

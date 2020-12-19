@@ -16,13 +16,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //NumbersViewModel model = new ViewModelProvider(this).get(NumbersViewModel.class);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .setReorderingAllowed(true)
-                    .add(R.id.main_fragment_container, GamePlayFragment.class, null)
-                    .commit();
-        }
     }
 
     @Override

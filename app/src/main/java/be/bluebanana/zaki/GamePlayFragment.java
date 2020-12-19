@@ -11,6 +11,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -23,6 +26,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.Locale;
+
+import static androidx.navigation.Navigation.findNavController;
 
 public class GamePlayFragment extends Fragment {
 
@@ -96,12 +101,7 @@ public class GamePlayFragment extends Fragment {
             }
         });
         sv.setOnClickListener(v -> {
-            FragmentManager fragmentManager = getParentFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main_fragment_container, SolutionsFragment.class, null)
-                    .setReorderingAllowed(true)
-                    .addToBackStack("name") // name can be null
-                    .commit();
+            findNavController(v).navigate(R.id.action_gamePlayFragment_to_solutionsFragment);
         });
 
         // Finally, create the button view
