@@ -1,7 +1,6 @@
 package be.bluebanana.zaki;
 
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,11 +15,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.Locale;
-
 public class SolutionsFragment extends Fragment {
-
-    private static final Locale locale = Resources.getSystem().getConfiguration().getLocales().get(0);
 
     RecyclerView recyclerView;
     SolutionAdapter recyclerViewAdapter;
@@ -44,7 +39,7 @@ public class SolutionsFragment extends Fragment {
         NumbersViewModel model = new ViewModelProvider(requireActivity()).get(NumbersViewModel.class);
 
         recyclerView = rootView.findViewById(R.id.solutions_scrollview);
-        model.getSolutions().observe(requireActivity(), solutionList -> {
+        model.getSolutions().observe(getViewLifecycleOwner(), solutionList -> {
                 Log.d("SolutionsFragment", String.format("Found %d solutions, updating...", solutionList.size()));
 
                 Node.MathFormat format = sharedPreferences.getBoolean("solution_render_latex_preference", true) ?

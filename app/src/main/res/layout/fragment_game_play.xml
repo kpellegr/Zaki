@@ -73,6 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle"
         tools:context=".ButtonFragment">
 
         <Button
@@ -81,6 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/button_label_small" />
 
         <Button
@@ -90,6 +92,7 @@
             android:layout_weight="1"
             android:layout_margin="10dp"
             android:visibility="invisible"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/button_label_generate" />
 
         <Button
@@ -98,6 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_margin="10dp"
+            style="?android:attr/buttonBarButtonStyle"
             android:text="@string/button_label_large" />
 
     </LinearLayout>

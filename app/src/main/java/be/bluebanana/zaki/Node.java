@@ -118,11 +118,8 @@ public class Node {
 
     @NonNull
     public String toString(MathFormat format) {
-        switch (format) {
-            case LATEX: return toLateXString();
-            default: return toPlainTextString();
-        }
-
+        if (format == MathFormat.LATEX) return toLateXString();
+        return toPlainTextString();
     }
 
     // Print the formula as plain text
@@ -130,7 +127,7 @@ public class Node {
         StringBuilder sb = new StringBuilder();
 
         if (this.isLeaf()) {
-            sb.append(String.format("%.0f", getValue()));
+            sb.append((int) getValue());
         } else {
 
             boolean needsNoParenthesis =
@@ -150,11 +147,12 @@ public class Node {
         return sb.toString();
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public String toLateXString() {
         StringBuilder sb = new StringBuilder();
 
         if (this.isLeaf()) {
-            sb.append(String.format("%.0f", getValue()));
+            sb.append((int) getValue());
         } else {
 
             boolean needsNoParenthesis =

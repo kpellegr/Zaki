@@ -64,9 +64,9 @@ public class SolutionAdapter extends RecyclerView.Adapter<SolutionAdapter.Soluti
 
         public SolutionViewHolder(View view) {
             super(view);
-            textView = (TextView) view.findViewById(R.id.solution_textview);
+            textView = (TextView) view.findViewById(R.id.solution_text_view);
 
-            mathView = (MTMathView) view.findViewById(R.id.solution_mathview);
+            mathView = (MTMathView) view.findViewById(R.id.solution_math_view);
             mathView.setFontSize(64.0f);
             mathView.setLabelMode(MTMathView.MTMathViewMode.KMTMathViewModeDisplay);
         }

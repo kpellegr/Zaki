@@ -9,12 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
 import android.util.Log;
@@ -24,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.agog.mathdisplay.MTMathView;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +32,6 @@ public class GamePlayFragment extends Fragment {
     private static final int MAX_SOLUTION_TIME = 60;
     private static final Locale locale = Resources.getSystem().getConfiguration().getLocales().get(0);
 
-    private final TextView[] numberViewArray = new TextView[6];
     private final MediaPlayer mediaPlayer = new MediaPlayer();
 
     private SharedPreferences sharedPreferences;
@@ -78,7 +71,6 @@ public class GamePlayFragment extends Fragment {
             TextView tv = cardView.findViewById(R.id.card_number_view);
             tv.setText(String.format(locale, "%d", i+1));
             cardGridLayout.addView(cardView);
-            numberViewArray[i] = tv;
 
             // The cards should observe "getNumbers" in the model
             model.getNumbers().observe(getViewLifecycleOwner(),
@@ -104,14 +96,13 @@ public class GamePlayFragment extends Fragment {
                         @Override
                         public void onChanged(Integer target) {
                             String strTarget = Integer.toString(target);
-                            char digit = getBoundValue() < strTarget.length() ?
-                                digit = Integer.toString(target).charAt(this.getBoundValue()) : '0';
+                            char digit = (getBoundValue() < strTarget.length()) ?
+                                strTarget.charAt(this.getBoundValue()) : '0';
                             tv.setText(String.format(locale, "%c", digit));
                         }
                     }
             );
         }
-
 
         // Observe the number of solutions
         TextView sv = rootView.findViewById(R.id.solutions_view);
@@ -124,9 +115,7 @@ public class GamePlayFragment extends Fragment {
                 sv.setText(res.getQuantityString(R.plurals.str_solutions, solutions.size(), solutions.size()));
             }
         });
-        sv.setOnClickListener(v -> {
-            findNavController(v).navigate(R.id.action_gamePlayFragment_to_solutionsFragment);
-        });
+        sv.setOnClickListener(v -> findNavController(v).navigate(R.id.action_gamePlayFragment_to_solutionsFragment));
 
         // Finally, create the button view
         ViewGroup buttonLayout = (ViewGroup)rootView.findViewById(R.id.button_container);
@@ -170,6 +159,8 @@ public class GamePlayFragment extends Fragment {
                     generate.setVisibility(View.INVISIBLE);
                     break;
                 case TIMER_GONE:
+                    smallInc.setVisibility(View.INVISIBLE);
+                    largeInc.setVisibility(View.INVISIBLE);
                     sv.setVisibility(View.VISIBLE);
                     generate.setVisibility(View.VISIBLE);
                     generate.setText(R.string.button_label_replay);
@@ -236,7 +227,7 @@ public class GamePlayFragment extends Fragment {
 
     private abstract static class MyIntObserver<T> implements Observer<T> {
 
-        int boundValue;
+        final int boundValue;
 
         public MyIntObserver (int bindingValue) {
             boundValue = bindingValue;

@@ -78,7 +78,7 @@ public class NumbersViewModel extends ViewModel {
     }
 
     public void generateCard(int type) {
-        int currentValue = currentCard.getValue();
+        int currentValue = (currentCard.getValue() != null) ? currentCard.getValue() : 0;
         if (currentValue >= NUMBER_OF_NUMBERS) { return; }
 
         generateCard(type, currentValue);
@@ -132,7 +132,7 @@ public class NumbersViewModel extends ViewModel {
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (timer.getValue() > maxTimeMs) {
+                if ((timer.getValue() == null) || (timer.getValue() > maxTimeMs)) {
                     state.postValue(GameState.TIMER_GONE);
                     this.cancel();
                 }
@@ -142,7 +142,8 @@ public class NumbersViewModel extends ViewModel {
 
         ExecutorService service =  Executors.newSingleThreadExecutor();
         service.submit(() -> {
-            List<Node> newSolutions = Solver.solve(getNumbers().getValue(), getTarget().getValue());
+            int target = (getTarget().getValue() != null) ? getTarget().getValue() : 0;
+            List<Node> newSolutions = Solver.solve(getNumbers().getValue(), target);
             solutions.postValue(newSolutions);
         });
 
